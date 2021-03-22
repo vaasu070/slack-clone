@@ -14,10 +14,14 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AddIcon from "@material-ui/icons/Add";
 
+import { useStateValue } from "./StateProvider";
+
 import { db } from "./firebase";
 
 function Sidebar(props) {
   const [Channels, setChannles] = useState([]);
+
+  const [{ user }, dispatch] = useStateValue();
 
   useEffect(() => {
     db.collection("rooms").onSnapshot((snapshot) => {
@@ -30,10 +34,10 @@ function Sidebar(props) {
     <div className="sidebar">
       <div className="sidebar__header">
         <div className="sidebar__info">
-          <h2>Clever Programmer</h2>
+          <h2>React Programming</h2>
           <h3>
             <FiberManualRecordIcon />
-            Vaasu Varma
+            {user?.displayName}
           </h3>
         </div>
         <CreateIcon />
@@ -50,7 +54,11 @@ function Sidebar(props) {
       <hr />
       <SidebarOption Icon={ExpandMoreIcon} title={"Channels"} />
       <hr />
-      <SidebarOption Icon={AddIcon} title={"Add Channel"} addChannelOption={true} />
+      <SidebarOption
+        Icon={AddIcon}
+        title={"Add Channel"}
+        addChannelOption={true}
+      />
 
       {Channels.map(({ id, name }) => (
         <SidebarOption title={name} key={id} id={id} />
